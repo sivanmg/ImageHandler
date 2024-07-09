@@ -107,27 +107,30 @@ namespace ImageResizer
                 else
                     matchingImages[0].ImagesPath.Add(imageFile);
             }
+
+            foreach (var item in _imagesArray)
+            {
+                Console.WriteLine( item.ImageAtlas + " Imagenes: " + item.ImagesPath.Count);
+                
+            }
+
         }
 
 
         static (int, int) FindClosestFactors(int target)
         {
-            if (target == 1)
-                return (1, 1);
-
-            int n = target;
-            var pairs = Enumerable.Range((int)Math.Sqrt(n), n - (int)Math.Sqrt(n) + 1)
-                             .Where(a => n % a == 0)
-                                .Select(a => (a, n / a, Math.Abs(n / a - a)));
-
-            if (pairs.ToArray()[0].Item2 == 1)
+            int gridSize = (int)Math.Ceiling(Math.Sqrt(target));
+            int w = gridSize, h = gridSize;
+            do
             {
-                int mid = target / 2;
-                return (mid + 1, 2);
-            }
+                if (w * (h - 1) < target)
+                    break;
+                h--;
+
+            } while (h > 0);
 
 
-            return (pairs.ToArray()[0].a, pairs.ToArray()[0].Item2);
+            return (w, h);
         }
 
 
